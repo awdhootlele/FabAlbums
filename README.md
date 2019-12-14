@@ -1,3 +1,17 @@
+Facebook Album Slideshow
+
+React app that uses facebook login API + graph API to log in and fetch user profile info + user albums and create slideshow of each album.
+
+Created just to learn facebook login api + graphs API and how to use it with react + redux
+
+Tech used -
+
+1. React (CRA)
+2. Redux
+3. Facebook JS SDK
+4. Bootstrap 4 + SCSS via scss loader
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
