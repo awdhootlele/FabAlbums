@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import facebookAPI from '../api/facebook';
 
@@ -15,9 +15,17 @@ class App extends React.Component {
     authenticated: false
   };
   componentDidMount() {
+    console.log('PROPS', this.props);
     if (localStorage.getItem('accessToken')) {
       this.setState({ authenticated: true });
     }
+
+    facebookAPI.checkLoginStatus(response => {
+      if (response.status !== 'connected') {
+        // login error - redirect to login
+        this.props.history.push('/login');
+      }
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -26,20 +34,20 @@ class App extends React.Component {
       // fetch user data like albums, etc
       facebookAPI.getAlbums(response => {
         const albums = response.albums || { data: [] };
-        console.log('ALBUMS ', response);
         this.props.gotUserData(albums.data);
+        this.props.history.push('/facebook-albums');
       });
     }
   }
   render() {
-    const { authenticated } = this.state;
+    const { isLoggedIn } = this.props;
     return (
       <div className='App container'>
         <Switch>
           <Route path='/login'>
             <Login />
           </Route>
-          <PrivateRoute path='/facebook-albums' authenticated={authenticated}>
+          <PrivateRoute path='/facebook-albums' authenticated={isLoggedIn}>
             <Albums />
           </PrivateRoute>
           <Route path='/'>
@@ -57,7 +65,9 @@ class App extends React.Component {
 
 const mapStateToProps = state => ({ isLoggedIn: state.userData.isLoggedIn });
 
-export default connect(mapStateToProps, {
-  getUserData: getUserData,
-  gotUserData: getUserDataSuccess
-})(App);
+export default withRouter(
+  connect(mapStateToProps, {
+    getUserData: getUserData,
+    gotUserData: getUserDataSuccess
+  })(App)
+);
