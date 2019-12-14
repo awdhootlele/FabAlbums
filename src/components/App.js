@@ -8,7 +8,7 @@ import './App.scss';
 import Albums from './Albums/Albums';
 import Login from './Login/Login';
 import PrivateRoute from './privateRoute';
-import {  getUserDataSuccess, getUserProfileSuccess } from '../actions';
+import { getUserDataSuccess, getUserProfileSuccess } from '../actions';
 import Home from './Home/Home';
 
 class App extends React.Component {
@@ -16,14 +16,14 @@ class App extends React.Component {
     authenticated: false
   };
   componentDidMount() {
-    console.log('PROPS', this.props);
     if (localStorage.getItem('accessToken')) {
       this.setState({ authenticated: true });
     }
 
     facebookAPI.checkLoginStatus(response => {
+      // TODO - Figure out why loginState becomes 'unknown' on refresh, kicking back user to login page
+
       console.log('RESPONSE STATUS', response);
-      
       if (response.status !== 'connected') {
         // login error - redirect to login
         this.props.history.push('/login');
@@ -34,25 +34,23 @@ class App extends React.Component {
   componentDidUpdate(prevProps) {
     const { isLoggedIn } = this.props;
     if (isLoggedIn && isLoggedIn !== prevProps.isLoggedIn) {
-      console.log('FETCHING USER DATA');
-      
       // fetch user data like albums, etc
       facebookAPI.getAlbums(response => {
         const albums = response.albums || { data: [] };
         this.props.gotUserData(albums.data);
-        
-        facebookAPI.getUserProfile((response) => {
-          console.log('USER PROFILE', response);
-          this.props.getUserProfileSuccess(response)
+
+        facebookAPI.getUserProfile(response => {
+          this.props.gotUserProfile(response);
           this.props.history.push('/facebook-albums');
-          
         });
       });
     }
   }
   render() {
     const { isLoggedIn } = this.props;
+    console.log('in app', isLoggedIn);
     
+
     return (
       <div className='App container'>
         <Switch>

@@ -17,7 +17,7 @@ function facebookAPI() {
       }
     };
     facebookPromise.then(FB => {
-      FB && FB.login(callback || defaultCallback, { scope: 'user_photos' });
+      FB && FB.login(callback || defaultCallback, { scope: ['user_photos', 'user_location'] });
     });
   };
   returnVal.getAlbums = function(callback) {
@@ -33,7 +33,11 @@ function facebookAPI() {
       console.log('USER PROFILE,', response);
     };
     facebookPromise.then(FB => {
-      FB && FB.api('/me?fields=id,name,birthday,email,hometown, picture.width(200).height(200)', callback || defaultCbk);
+      FB &&
+        FB.api(
+          '/me?fields=id,name,birthday,email,hometown,picture.width(200).height(200),location',
+          callback || defaultCbk
+        );
     });
   };
   returnVal.checkLoginStatus = function(callback) {
@@ -57,7 +61,7 @@ function facebookAPI() {
       }
     };
     facebookPromise.then(FB => {
-      FB && FB.getLoginStatus(callback || defaultCbk);
+      FB && FB.getLoginStatus(callback || defaultCbk, true);
     });
   };
   return returnVal;
