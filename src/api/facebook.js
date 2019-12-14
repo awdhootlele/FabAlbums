@@ -25,7 +25,8 @@ function facebookAPI() {
       console.log('Albums', response.albums);
     };
     facebookPromise.then(FB => {
-      FB && FB.api('/me?fields=albums', callback || defaultCallback);
+      // FB && FB.api('/me?fields=albums', callback || defaultCallback);
+      FB && FB.api('/me?fields=albums{name,count,cover_photo{picture}}', callback || defaultCallback);
     });
   };
   returnVal.getUserProfile = function(callback) {

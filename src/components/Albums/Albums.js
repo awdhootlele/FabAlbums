@@ -1,8 +1,24 @@
 import React from 'react';
+import { connect } from 'react-redux';
 
 import './Albums.scss';
-export default class Albums extends React.Component {
+import AlbumThumbnail from '../AlbumThumbnail/AlbumThumbnail';
+class Albums extends React.Component {
   render() {
-    return <div>ALBUMS</div>;
+    const { albums } = this.props;
+    return (
+      <div className='albums-container d-flex justify-content-center'>
+        {albums.map((album, index) => {
+          return <AlbumThumbnail key={index} album={album} />;
+        })}
+      </div>
+    );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    albums: state.userData.albums
+  };
+};
+export default connect(mapStateToProps, null)(Albums);
