@@ -1,10 +1,14 @@
 import React from 'react';
 import { Switch, Route, Redirect } from 'react-router-dom';
+import { connect } from 'react-redux';
+import facebookAPI from '../api/facebook';
+
 // import logo from './logo.svg';
 import './App.scss';
 import Albums from './Albums/Albums';
 import Login from './Login/Login';
 import PrivateRoute from './privateRoute';
+import { getUserData, getUserDataSuccess } from '../actions';
 
 class App extends React.Component {
   state = {
@@ -16,29 +20,21 @@ class App extends React.Component {
     }
   }
 
-  componentClicked = event => {
-    console.log('Clicked', event);
-  };
-  responseFacebook = event => {
-    console.log('RESPONSE ', event);
-  };
+  componentDidUpdate(prevProps) {
+    const { isLoggedIn } = this.props;
+    if (isLoggedIn && isLoggedIn !== prevProps.isLoggedIn) {
+      // fetch user data like albums, etc
+      facebookAPI.getAlbums(response => {
+        const albums = response.albums || { data: [] };
+        console.log('ALBUMS ', response);
+        this.props.gotUserData(albums.data);
+      });
+    }
+  }
   render() {
     const { authenticated } = this.state;
     return (
       <div className='App container'>
-        {/* <header className='App-header'>
-          <img src={logo} className='App-logo' alt='logo' />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className='App-link'
-            href='https://reactjs.org'
-            target='_blank'
-            rel='noopener noreferrer'>
-            Learn React
-          </a>
-        </header> */}
         <Switch>
           <Route path='/login'>
             <Login />
@@ -59,4 +55,9 @@ class App extends React.Component {
   }
 }
 
-export default App;
+const mapStateToProps = state => ({ isLoggedIn: state.userData.isLoggedIn });
+
+export default connect(mapStateToProps, {
+  getUserData: getUserData,
+  gotUserData: getUserDataSuccess
+})(App);

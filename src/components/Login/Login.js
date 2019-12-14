@@ -1,27 +1,46 @@
 import React from 'react';
-import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props';
+import { connect } from 'react-redux';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebookF, faGooglePlusG } from '@fortawesome/free-brands-svg-icons';
 
+import facebookAPI from '../../api/facebook';
 import './Login.scss';
-export default class Login extends React.Component {
+import { facebookLoginSuccess, facebookLoginError } from '../../actions';
+
+class Login extends React.Component {
   logIn = event => {
-    console.log('Clicked', event);
-    if (window.FB) {
-      const { FB } = window;
-      FB.login(function(response) {
-        console.log('RES', response);
-        
-        if (response.authResponse) {
-          console.log('Welcome!  Fetching your information.... ');
-          FB.api('/me', function(response) {
-            console.log('Good to see you, ' + response.name + '.', response);
-          });
-        } else {
-          console.log('User cancelled login or did not fully authorize.');
-        }
-      });
-    }
+    console.log('PORPS', this.props);
+
+    facebookAPI.login(response => {
+      console.log('RESPONSE ', response);
+      if (response.status === 'connected') {
+        this.props.facebookLoginSuccess();
+      } else {
+        this.props.facebookLoginError();
+      }
+    });
+    // if (window.FB) {
+    //   const { FB } = window;
+    //   FB.login(function(response) {
+    //     console.log('RES', response);
+
+    //     if (response.authResponse) {
+    //       console.log('Welcome!  Fetching your information.... ');
+    //       FB.api('/me', function(response) {
+    //         console.log('Good to see you, ' + response.name + '.', response);
+    //         FB.api('/me?fields=albums', response1 => {
+    //           console.log('ALBUMS', response1);
+    //         });
+    //         FB.api('/me/photos', response1 => {
+    //           console.log('PHOTOS', response1);
+    //         });
+    //       });
+
+    //     } else {
+    //       console.log('User cancelled login or did not fully authorize.');
+    //     }
+    //   }, {scope: 'user_photos'});
+    // }
   };
   render() {
     return (
@@ -74,3 +93,13 @@ export default class Login extends React.Component {
     );
   }
 }
+
+const mapStateToProps = state => {
+  return {
+  };
+};
+
+export default connect(mapStateToProps, {
+  facebookLoginSuccess,
+  facebookLoginError
+})(Login);

@@ -1,15 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router} from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { composeWithDevTools } from "redux-devtools-extension";
+
+import { createStore, applyMiddleware } from 'redux';
+import logger from 'redux-logger';
+import { Provider } from 'react-redux';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './index.scss';
 import App from './components/App';
 import * as serviceWorker from './serviceWorker';
+import reducers from './reducers';
+
+const store = createStore(reducers, composeWithDevTools(applyMiddleware(logger)));
 
 ReactDOM.render(
-  <Router>
-    <App />
-  </Router>,
+  <Provider store={store}>
+    <Router>
+      <App />
+    </Router>
+  </Provider>,
   document.getElementById('root')
 );
 
