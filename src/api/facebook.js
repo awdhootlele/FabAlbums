@@ -65,6 +65,15 @@ function facebookAPI() {
       FB && FB.getLoginStatus(callback || defaultCbk, true);
     });
   };
+  returnVal.getAlbumDetails = function(albumId, callback) {
+    const defaultCallback = function(response) {
+      console.log('RESPONSE ALBUM', response);
+      
+    }
+    facebookPromise.then(FB => {
+      FB && FB.api(`/${albumId}/?fields=photos{picture,images}`,callback || defaultCallback, true);
+    });
+  }
   return returnVal;
 }
 

@@ -24,7 +24,7 @@ class Login extends React.Component {
       <div id='logreg-forms'>
         <form className='form-signin'>
           <h1 className='h3 mb-3 font-weight-normal text-center'> Sign in</h1>
-          <div className='social-login'>
+          <div className='social-login d-flex justify-content-between'>
             <button className='btn facebook-btn social-btn' type='button' onClick={this.logIn}>
               <span>
                 <FontAwesomeIcon icon={faFacebookF} />
