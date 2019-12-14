@@ -8,7 +8,8 @@ import './App.scss';
 import Albums from './Albums/Albums';
 import Login from './Login/Login';
 import PrivateRoute from './privateRoute';
-import { getUserData, getUserDataSuccess } from '../actions';
+import {  getUserDataSuccess, getUserProfileSuccess } from '../actions';
+import Home from './Home/Home';
 
 class App extends React.Component {
   state = {
@@ -21,6 +22,8 @@ class App extends React.Component {
     }
 
     facebookAPI.checkLoginStatus(response => {
+      console.log('RESPONSE STATUS', response);
+      
       if (response.status !== 'connected') {
         // login error - redirect to login
         this.props.history.push('/login');
@@ -31,16 +34,25 @@ class App extends React.Component {
   componentDidUpdate(prevProps) {
     const { isLoggedIn } = this.props;
     if (isLoggedIn && isLoggedIn !== prevProps.isLoggedIn) {
+      console.log('FETCHING USER DATA');
+      
       // fetch user data like albums, etc
       facebookAPI.getAlbums(response => {
         const albums = response.albums || { data: [] };
         this.props.gotUserData(albums.data);
-        this.props.history.push('/facebook-albums');
+        
+        facebookAPI.getUserProfile((response) => {
+          console.log('USER PROFILE', response);
+          this.props.getUserProfileSuccess(response)
+          this.props.history.push('/facebook-albums');
+          
+        });
       });
     }
   }
   render() {
     const { isLoggedIn } = this.props;
+    
     return (
       <div className='App container'>
         <Switch>
@@ -48,7 +60,7 @@ class App extends React.Component {
             <Login />
           </Route>
           <PrivateRoute path='/facebook-albums' authenticated={isLoggedIn}>
-            <Albums />
+            <Home />
           </PrivateRoute>
           <Route path='/'>
             <Redirect
@@ -67,7 +79,7 @@ const mapStateToProps = state => ({ isLoggedIn: state.userData.isLoggedIn });
 
 export default withRouter(
   connect(mapStateToProps, {
-    getUserData: getUserData,
-    gotUserData: getUserDataSuccess
+    gotUserData: getUserDataSuccess,
+    gotUserProfile: getUserProfileSuccess
   })(App)
 );

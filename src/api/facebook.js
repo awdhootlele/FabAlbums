@@ -28,6 +28,14 @@ function facebookAPI() {
       FB && FB.api('/me?fields=albums', callback || defaultCallback);
     });
   };
+  returnVal.getUserProfile = function(callback) {
+    const defaultCbk = function(response) {
+      console.log('USER PROFILE,', response);
+    };
+    facebookPromise.then(FB => {
+      FB && FB.api('/me?fields=id,name,birthday,email,hometown, picture.width(200).height(200)', callback || defaultCbk);
+    });
+  };
   returnVal.checkLoginStatus = function(callback) {
     const defaultCbk = function(response) {
       if (response.status === 'connected') {

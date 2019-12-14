@@ -8,39 +8,16 @@ import './Login.scss';
 import { facebookLoginSuccess, facebookLoginError } from '../../actions';
 
 class Login extends React.Component {
-  logIn = event => {
-    console.log('PORPS', this.props);
-
+  logIn = () => {
     facebookAPI.login(response => {
-      console.log('RESPONSE ', response);
+      console.log('Login response', response);
+      
       if (response.status === 'connected') {
         this.props.facebookLoginSuccess();
       } else {
         this.props.facebookLoginError();
       }
     });
-    // if (window.FB) {
-    //   const { FB } = window;
-    //   FB.login(function(response) {
-    //     console.log('RES', response);
-
-    //     if (response.authResponse) {
-    //       console.log('Welcome!  Fetching your information.... ');
-    //       FB.api('/me', function(response) {
-    //         console.log('Good to see you, ' + response.name + '.', response);
-    //         FB.api('/me?fields=albums', response1 => {
-    //           console.log('ALBUMS', response1);
-    //         });
-    //         FB.api('/me/photos', response1 => {
-    //           console.log('PHOTOS', response1);
-    //         });
-    //       });
-
-    //     } else {
-    //       console.log('User cancelled login or did not fully authorize.');
-    //     }
-    //   }, {scope: 'user_photos'});
-    // }
   };
   render() {
     return (
@@ -95,8 +72,7 @@ class Login extends React.Component {
 }
 
 const mapStateToProps = state => {
-  return {
-  };
+  return {};
 };
 
 export default connect(mapStateToProps, {
