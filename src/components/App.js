@@ -22,8 +22,6 @@ class App extends React.Component {
 
     facebookAPI.checkLoginStatus(response => {
       // TODO - Figure out why loginState becomes 'unknown' on refresh, kicking back user to login page
-
-      console.log('RESPONSE STATUS', response);
       if (response.status !== 'connected') {
         // login error - redirect to login
         this.props.history.push('/login');
@@ -48,8 +46,6 @@ class App extends React.Component {
   }
   render() {
     const { isLoggedIn } = this.props;
-    console.log('in app', isLoggedIn);
-    
 
     return (
       <div className='App container'>

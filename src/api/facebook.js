@@ -22,7 +22,6 @@ function facebookAPI() {
   };
   returnVal.getAlbums = function(callback) {
     const defaultCallback = response => {
-      console.log('Albums', response.albums);
     };
     facebookPromise.then(FB => {
       // FB && FB.api('/me?fields=albums', callback || defaultCallback);
