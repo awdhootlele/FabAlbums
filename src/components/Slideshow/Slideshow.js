@@ -17,12 +17,7 @@ class Slideshow extends React.Component {
     } = match;
     const album = albumWithDetails[albumId];
     const data = (album && album.data) || [];
-    console.log('DATA ', data);
-
-    // TODO - show image gallery and slideshow button to show slideshow in separate route
-    // Note - make sure to load the first image in the container
-    // data[0] -> 1st picture in an album
-    //data[0].images[0] -> Higher resolution picture -> Make sure to use this in img tag
+    // TODO - Figure out why carousal is not auto resuming on load even if data-ride='carousel' is set
 
     return (
       <div className='album-detail-container'>
