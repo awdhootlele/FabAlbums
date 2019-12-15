@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import Profile from '../Profile/Profile';
 import Albums from '../Albums/Albums';
 import AlbumDetail from '../AlbumDetail/AlbumDetail';
+import Slideshow from '../Slideshow/Slideshow';
 class Home extends React.Component {
   goToAlbums = () => {
     this.props.history.push('/facebook-albums/albums');
@@ -15,6 +16,9 @@ class Home extends React.Component {
     return (
       <div>
         <Switch>
+          <Route path='/facebook-albums/albums/:albumId/slideshow'>
+            <Slideshow />
+          </Route>
           <Route path='/facebook-albums/albums/:albumId'>
             <AlbumDetail />
           </Route>
